@@ -1,5 +1,6 @@
 package study.streamapi;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -30,6 +31,10 @@ import study.methodreference.EmployeeData;
  *   mapToLong(ToLongFunction f):接收一个函数作为参数，该函数会被应用到每个元素上，产生一个新的LongStream
  *   flatMap(Function f):接收一个函数作为参数,将流中的每个值都换成另一个流，然后把所有流连接成一个流
  *
+ * todo: 3.排序
+ *   方法              描述
+ *   sorted(): 产生一个新流，其中按照自然顺序排序
+ *   sorted(Comparator com):产生一个新流，其中安比较器顺序排序
  *
  */
 public class StreamIntermediateOperation {
@@ -57,7 +62,7 @@ public class StreamIntermediateOperation {
         employees.stream().distinct().forEach(System.out::println);
     }
     /**
-     * 隐射
+     * 映射: 按照一定对规则将元素进行转换,会操作集合中的每个元素
      */
     @Test
     public void test2(){
@@ -71,6 +76,67 @@ public class StreamIntermediateOperation {
                 .filter(name -> name.length() > 3)
                 .forEach(System.out::println);
         //flatMap(Function f):接收一个函数作为参数,将流中的每个值都换成另一个流，然后把所有流连接成一个流
+        //todo: flatMap类似于List集合的addAll，map类似于与List集合的add
+        //使用map则是Stream组成的Stream
+        Stream<Stream<Character>> streamStream = strings.stream().map(StreamIntermediateOperation::fromStringStream);
+        //遍历 Stream组成的Stream
+        streamStream.forEach(stream -> stream.forEach(System.out::println));
+        System.out.println("使用flatMap");
+        //flatMap(Function f)： 将Stream中的Stream转换为对应的元素放的一个Stream中
+        Stream<Character> characterStream = strings.stream().flatMap(StreamIntermediateOperation::fromStringStream);
+        characterStream.forEach(System.out::println);
+    }
 
+    /**
+     * 将字符串的多个字符构成的集合转换为对于的Stream的实例
+     * @param str
+     * @return
+     */
+    public static Stream<Character> fromStringStream(String str){
+        ArrayList<Character> list = new ArrayList<>();
+        for (char c : str.toCharArray()) {
+            list.add(c);
+        }
+        return list.stream();
+    }
+    @Test
+    public void test(){
+        ArrayList list = new ArrayList();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+
+        ArrayList arrayList = new ArrayList();
+        arrayList.add(5);
+        arrayList.add(6);
+        arrayList.add(7);
+
+        //四个元素,把arrayList当作对象存入到list中
+        list.add(arrayList);
+        System.out.println(list);
+        //8个元素，把arrayList中的每个元素都存入到list中
+        list.addAll(arrayList);
+        System.out.println(list);
+    }
+
+    /**
+     * 3.排序
+     */
+    @Test
+    public void test3(){
+        //sorted(): 自然排序
+        List<Integer> list = Arrays.asList(1, 43, 2, 13, 23, 45, 21, 87, 0, -5, 43, 6);
+        list.stream().sorted().forEach(System.out::println);
+        System.out.println("定制排序");
+        //sorted(Comparator com): 定制排序
+        List<Employee> employees = EmployeeData.getEmployees();
+        employees.stream().sorted((e1,e2) -> {
+            int count = e1.getAge()- e2.getAge();
+            if (count == 0){
+                return (int)(e1.getSalary() - e2.getSalary());
+            }
+            return count;
+        }).forEach(System.out::println);
     }
 }
