@@ -1,0 +1,23 @@
+package study.polymorphic.study.polymorphicdetails;
+
+/**
+ * @author AllLearnAllNothingRookie
+ * @version 1.0
+ * @date 2022/11/27 20:23
+ */
+public class Animal {
+    String name = "动物";
+    int age = 10;
+    public void sleep(){
+        System.out.println("睡");
+    }
+    public void run(){
+        System.out.println("跑");
+    }
+    public void eat(){
+        System.out.println("吃");
+    }
+    public  void show(){
+        System.out.println("叫");
+    }
+}
