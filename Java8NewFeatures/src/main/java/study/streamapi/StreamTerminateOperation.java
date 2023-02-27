@@ -3,6 +3,8 @@ package study.streamapi;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.Test;
 import study.methodreference.Employee;
 import study.methodreference.EmployeeData;
@@ -109,6 +111,12 @@ public class StreamTerminateOperation {
         //collect(Collector c):将流转换为其他形式，接收一个Collector接口的实现，用于给Stream中
         //  元素做汇总的方法
         //练习：查找工资大于6000的员工，结果返回为一个List或Set
+        List<Employee> employees = EmployeeData.getEmployees();
+        List<Employee> employeeList = employees.stream().filter(e -> e.getSalary() > 6000).collect(Collectors.toList());
+        employeeList.forEach(System.out::println);
+        System.out.println();
+        Set<Employee> employeeSet = employees.stream().filter(e -> e.getSalary() > 6000).collect(Collectors.toSet());
+        employeeSet.forEach(System.out::println);
 
     }
 }
